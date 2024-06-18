@@ -1,10 +1,10 @@
 certificateAuthorities:
-    org1.example.com:
+    org2.example.com:
         tlsCACerts:
-            path: /etc/firefly/organizations/peerOrganizations/org1.example.com/msp/tlscacerts/ca.crt
-        url: https://ca_org1:7054
+            path: /etc/firefly/organizations/peerOrganizations/org2.example.com/msp/tlscacerts/ca.crt
+        url: https://ca_org2:8054
         grpcOptions:
-            ssl-target-name-override: org1.example.com
+            ssl-target-name-override: org2.example.com
         registrar:
             enrollId: admin
             enrollSecret: adminpw
@@ -29,35 +29,35 @@ client:
             softVerify: true
     credentialStore:
         cryptoStore:
-            path: /etc/firefly/organizations/peerOrganizations/org1.example.com/msp
-        path: /etc/firefly/organizations/peerOrganizations/org1.example.com/msp
+            path: /etc/firefly/organizations/peerOrganizations/org2.example.com/msp
+        path: /etc/firefly/organizations/peerOrganizations/org2.example.com/msp
     cryptoconfig:
-        path: /etc/firefly/organizations/peerOrganizations/org1.example.com/msp
+        path: /etc/firefly/organizations/peerOrganizations/org2.example.com/msp
     logging:
         level: info
-    organization: org1.example.com
+    organization: org2.example.com
     tlsCerts:
         client:
             cert:
-                path: /etc/firefly/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/cert.pem
+                path: /etc/firefly/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/cert.pem
             key:
-                path: /etc/firefly/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/FILL_IN_KEY_NAME_HERE
+                path: /etc/firefly/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/FILL_IN_KEY_NAME_HERE
 orderers:
     fabric_orderer:
         tlsCACerts:
             path: /etc/firefly/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/tlscacerts/tls-localhost-9054-ca-orderer.pem
         url: grpcs://orderer.example.com:7050
 organizations:
-    org1.example.com:
+    org2.example.com:
         certificateAuthorities:
-            - org1.example.com
+            - org2.example.com
         cryptoPath: /tmp/msp
-        mspid: Org1MSP
+        mspid: Org2MSP
         peers:
             - fabric_peer
 peers:
     fabric_peer:
         tlsCACerts:
-            path: /etc/firefly/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/tlscacerts/tls-localhost-7054-ca-org1.pem
-        url: grpcs://peer0.org1.example.com:7051
+            path: /etc/firefly/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/tlscacerts/tls-localhost-8054-ca-org2.pem
+        url: grpcs://peer0.org2.example.com:9051
 version: 1.1.0%
