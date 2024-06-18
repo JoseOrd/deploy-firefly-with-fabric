@@ -1,0 +1,9 @@
+# Ignorar el script de instalación de Fabric
+install-fabric.sh
+
+# Ignorar la carpeta fabric-samples
+fabric-samples/
+
+# Ignorar el archivo de configuración de FireFly
+.ff/
+firefly/

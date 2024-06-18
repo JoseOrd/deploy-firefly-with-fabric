@@ -1,0 +1,203 @@
+# This file is generated - DO NOT EDIT!
+# To override config, edit docker-compose.override.yml
+version: "2.1"
+services:
+    dataexchange_0:
+        container_name: dev_dataexchange_0
+        image: ghcr.io/hyperledger/firefly-dataexchange-https@sha256:4ac765f7a07b9d17ab5648b3c789875791db364659c975a23626ec5921f11ce4
+        volumes:
+            - dataexchange_0:/data
+        ports:
+            - 10205:3000
+        logging:
+            driver: json-file
+            options:
+                max-file: "1"
+                max-size: 10m
+    dataexchange_1:
+        container_name: dev_dataexchange_1
+        image: ghcr.io/hyperledger/firefly-dataexchange-https@sha256:4ac765f7a07b9d17ab5648b3c789875791db364659c975a23626ec5921f11ce4
+        volumes:
+            - dataexchange_1:/data
+        ports:
+            - 10405:3000
+        logging:
+            driver: json-file
+            options:
+                max-file: "1"
+                max-size: 10m
+    fabconnect_0:
+        container_name: dev_fabconnect_0
+        image: ghcr.io/hyperledger/firefly-fabconnect@sha256:9479213b0114619c7690fa924ebbe7f837cf851c4ea9bd901798c7783edfc7e7
+        command: -f /fabconnect/fabconnect.yaml
+        volumes:
+            - fabconnect_receipts_0:/fabconnect/receipts
+            - fabconnect_events_0:/fabconnect/events
+            - /home/jose/.firefly/stacks/dev/init/blockchain/fabconnect.yaml:/fabconnect/fabconnect.yaml
+            - /home/jose/.firefly/stacks/dev/init/blockchain/0_msp:/etc/firefly/organizations
+            - /home/jose/.firefly/stacks/dev/init/blockchain/0_ccp.yaml:/fabconnect/ccp.yaml
+        ports:
+            - 5102:3000
+        healthcheck:
+            test:
+                - CMD
+                - wget
+                - -O
+                - '-'
+                - http://localhost:3000/status
+        logging:
+            driver: json-file
+            options:
+                max-file: "1"
+                max-size: 10m
+    fabconnect_1:
+        container_name: dev_fabconnect_1
+        image: ghcr.io/hyperledger/firefly-fabconnect@sha256:9479213b0114619c7690fa924ebbe7f837cf851c4ea9bd901798c7783edfc7e7
+        command: -f /fabconnect/fabconnect.yaml
+        volumes:
+            - fabconnect_receipts_1:/fabconnect/receipts
+            - fabconnect_events_1:/fabconnect/events
+            - /home/jose/.firefly/stacks/dev/init/blockchain/fabconnect.yaml:/fabconnect/fabconnect.yaml
+            - /home/jose/.firefly/stacks/dev/init/blockchain/1_msp:/etc/firefly/organizations
+            - /home/jose/.firefly/stacks/dev/init/blockchain/1_ccp.yaml:/fabconnect/ccp.yaml
+        ports:
+            - 5202:3000
+        healthcheck:
+            test:
+                - CMD
+                - wget
+                - -O
+                - '-'
+                - http://localhost:3000/status
+        logging:
+            driver: json-file
+            options:
+                max-file: "1"
+                max-size: 10m
+    firefly_core_0:
+        container_name: dev_firefly_core_0
+        image: ghcr.io/hyperledger/firefly@sha256:404c9193060de79f71d0f079629d8f11981fce822a648cb91b375ef2b3980204
+        volumes:
+            - /home/jose/.firefly/stacks/dev/runtime/config/firefly_core_0.yml:/etc/firefly/firefly.core.yml:ro
+            - firefly_core_data_0:/etc/firefly/data
+        ports:
+            - 5000:5000
+            - 5101:5101
+        depends_on:
+            dataexchange_0:
+                condition: service_started
+            fabconnect_0:
+                condition: service_healthy
+            fabconnect_1:
+                condition: service_healthy
+            ipfs_0:
+                condition: service_healthy
+        logging:
+            driver: json-file
+            options:
+                max-file: "1"
+                max-size: 10m
+    firefly_core_1:
+        container_name: dev_firefly_core_1
+        image: ghcr.io/hyperledger/firefly@sha256:404c9193060de79f71d0f079629d8f11981fce822a648cb91b375ef2b3980204
+        volumes:
+            - /home/jose/.firefly/stacks/dev/runtime/config/firefly_core_1.yml:/etc/firefly/firefly.core.yml:ro
+            - firefly_core_data_1:/etc/firefly/data
+        ports:
+            - 5001:5001
+            - 5201:5201
+        depends_on:
+            dataexchange_1:
+                condition: service_started
+            fabconnect_0:
+                condition: service_healthy
+            fabconnect_1:
+                condition: service_healthy
+            ipfs_1:
+                condition: service_healthy
+        logging:
+            driver: json-file
+            options:
+                max-file: "1"
+                max-size: 10m
+    ipfs_0:
+        container_name: dev_ipfs_0
+        image: ipfs/go-ipfs:v0.10.0
+        environment:
+            IPFS_SWARM_KEY: |-
+                /key/swarm/psk/1.0.0/
+                /base16/
+                983e7e40894515919e138b796b731d6f06fa379c2577e257399693d3a3234f89
+            LIBP2P_FORCE_PNET: "1"
+        volumes:
+            - ipfs_staging_0:/export
+            - ipfs_data_0:/data/ipfs
+        ports:
+            - 10206:5001
+            - 10207:8080
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - wget --post-data= http://127.0.0.1:5001/api/v0/id -O - -q
+            interval: 5s
+            timeout: 3s
+            retries: 12
+        logging:
+            driver: json-file
+            options:
+                max-file: "1"
+                max-size: 10m
+    ipfs_1:
+        container_name: dev_ipfs_1
+        image: ipfs/go-ipfs:v0.10.0
+        environment:
+            IPFS_SWARM_KEY: |-
+                /key/swarm/psk/1.0.0/
+                /base16/
+                983e7e40894515919e138b796b731d6f06fa379c2577e257399693d3a3234f89
+            LIBP2P_FORCE_PNET: "1"
+        volumes:
+            - ipfs_staging_1:/export
+            - ipfs_data_1:/data/ipfs
+        ports:
+            - 10406:5001
+            - 10407:8080
+        healthcheck:
+            test:
+                - CMD-SHELL
+                - wget --post-data= http://127.0.0.1:5001/api/v0/id -O - -q
+            interval: 5s
+            timeout: 3s
+            retries: 12
+        logging:
+            driver: json-file
+            options:
+                max-file: "1"
+                max-size: 10m
+    sandbox_0:
+        container_name: dev_sandbox_0
+        image: ghcr.io/hyperledger/firefly-sandbox:latest
+        environment:
+            FF_ENDPOINT: http://firefly_core_0:5000
+        ports:
+            - 5108:3001
+    sandbox_1:
+        container_name: dev_sandbox_1
+        image: ghcr.io/hyperledger/firefly-sandbox:latest
+        environment:
+            FF_ENDPOINT: http://firefly_core_1:5001
+        ports:
+            - 5208:3001
+volumes:
+    dataexchange_0: {}
+    dataexchange_1: {}
+    fabconnect_events_0: {}
+    fabconnect_events_1: {}
+    fabconnect_receipts_0: {}
+    fabconnect_receipts_1: {}
+    firefly_core_data_0: {}
+    firefly_core_data_1: {}
+    ipfs_data_0: {}
+    ipfs_data_1: {}
+    ipfs_staging_0: {}
+    ipfs_staging_1: {}
