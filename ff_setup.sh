@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Lookup for the Fabric binaries
-FABRIC_TEST_NETWORK="$PWD/network/fabric-samples/test-network"
+FABRIC_TEST_NETWORK="$PWD/network-deploy/fabric-samples/test-network"
 ORGANIZATIONS="$FABRIC_TEST_NETWORK/organizations"
 ORG1_USER_KEYSTORE_DIR="$ORGANIZATIONS/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/"
 ORG2_USER_KEYSTORE_DIR="$ORGANIZATIONS/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/"
-FABRIC_BINS=$PWD/network/fabric-samples/bin
+FABRIC_BINS=$PWD/network-deploy/fabric-samples/bin
 
 # Config
 RED='\033[0;31m'
@@ -18,8 +18,8 @@ echo -e "${GREEN}Iniciando la configuración de FireFly con Fabric...${NC}"
 echo -e "${GREEN}Para cancelar, presiona CTRL+C.${NC}"
 sleep 5
 
-mkdir network
-cd network/
+mkdir network-deploy
+cd network-deploy/
 
 curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
 ./install-fabric.sh docker samples binary
@@ -54,9 +54,9 @@ sleep 1
 # Deploy FireFly Chaincode
 echo -e "${GREEN}Empezando deploy del smart contract de firefly${NC}"
 
-cd ../../../firefly/smart_contracts/fabric/firefly-go
+cd ../../firefly/smart_contracts/fabric/firefly-go
 GO111MODULE=on go mod vendor
-cd ../../../../../fabric-samples/test-network
+cd ../../../../fabric-samples/test-network
 
 export PATH=${PWD}/../bin:$PATH
 export FABRIC_CFG_PATH=$PWD/../config/
