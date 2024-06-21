@@ -18,6 +18,7 @@ echo -e "${GREEN}Iniciando la configuración de FireFly con Fabric...${NC}"
 echo -e "${GREEN}Para cancelar, presiona CTRL+C.${NC}"
 sleep 5
 
+mkdir network
 cd network/
 
 curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
